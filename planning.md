@@ -54,6 +54,7 @@ Your project  should involve some analysis of covid data(Every concept of spark 
 - What we want to find out: "X factor influence Y result"
 - possible X factors
 	- Tanka: latitude/northern vs. southern hemisphere/seasons
+	- Tanka: comparing US vs. world-except-US average
 	- Dylan: by continent
 	- Dylan: initial appearance date of first confirmed case
 	- Derrick: height of first peak or amount of time between first confirmed case and first peak
