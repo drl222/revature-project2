@@ -43,9 +43,32 @@ Your project  should involve some analysis of covid data(Every concept of spark 
 		- continents
 	- ratio confirmed/deaths when comparing when the first confirmed date is later vs earlier
 - Likewise, cities
+- Likewise, compare by month
 - Look at peaks of cases vs. deaths/recovered within the same area (see how long it takes b/t positive case and death/recovery)
 	- if we want to be fancy, we can do correlations of the full time series rather than just peaks
 
 # What we know how to do
 - sum, average, difference, ratio (division)
 - we have both time and space information
+
+- What we want to find out: "X factor influence Y result"
+- possible X factors
+	- latitude
+	- northern vs. southern hemisphere/seasons
+	- by continent
+	- initial appearance date of first confirmed case
+	- height of first peak or amount of time between first confirmed case and first peak
+	- whether or not there's more than one peak
+	
+	- population (external data!)
+	- mask mandates (external data!)
+- how to measure influence
+	- throw X, Y on a graph and draw a trendline
+	- cross-correlation of graphs of some kind?
+- Y result
+	- total confirmations/deaths/recoveries
+		- confirmations/deaths/recoveries per day
+	- death:recovered or death:confirmed ratios
+
+
+- TO ASK MARIA: can we use outside information? Esp. population --> Yes
