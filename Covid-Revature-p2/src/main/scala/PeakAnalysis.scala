@@ -1,17 +1,21 @@
 import org.apache.spark.sql.SparkSession
-import breeze.linalg._
 import org.apache.spark.rdd.RDD
 
 object PeakAnalysis {
-  def takeDerivative(rdd:RDD[DenseVector[Double]]): RDD[DenseVector[Double]] = {
-    // central finite difference
+  def subtract_and_halve(a:Seq[Double], b:Seq[Double]):Seq[Double] = {
+    (a,b).zipped.map({
+      case (elementa, elementb) => (elementa - elementb)/2.0
+    })
+  }
+
+  def takeDerivative(rdd:RDD[Seq[Double]]): RDD[Seq[Double]] = {
     rdd.map(vec =>{
-      val output = DenseVector.zeros[Double](vec.size)
-      output(1 until vec.size-1) := (vec(2 until vec.size) - vec(0 until vec.size-2)) / DenseVector.fill(vec.size-2){2.0}
+      // central finite difference
+      val all_but_first_and_last = subtract_and_halve(vec.slice(2, vec.size), vec.slice(0, vec.size-2))
       // for the first and last point, because we can't do a central finite difference, do a forward/backwards one instead
-      output(0) = vec(1) - vec(0)
-      output(vec.size - 1) = vec(vec.size-1) - vec(vec.size-2)
-      output
+      val first_point = vec(1) - vec(0)
+      val last_point = vec(vec.size-1) - vec(vec.size-2)
+      first_point +: all_but_first_and_last :+ last_point
     })
   }
 
@@ -20,7 +24,7 @@ object PeakAnalysis {
     val df = Spark.loadData("Confirmed World")
     val metadata_only = df.select("Province/State", "Country/Region", "Lat", "Long").rdd
     val data_only = df.drop("Province/State", "Country/Region", "Lat", "Long").rdd
-      .map(row => DenseVector(row.toSeq.toArray.map(x => x.asInstanceOf[String].toDouble)))
+      .map(row =>row.toSeq.map(x => x.asInstanceOf[String].toDouble))
     val daily_cases = takeDerivative(data_only)
 
 
@@ -33,7 +37,7 @@ object PeakAnalysis {
 
     val peaks_indices = derivative.zip(second_derivative).map({
       case (deriv1, deriv2) => {
-        val zipped = deriv1.toArray.zip(deriv2.toArray).zipWithIndex
+        val zipped = deriv1.zip(deriv2).zipWithIndex
         zipped.filter({
           case ((d1, d2), i) => math.abs(d1) < 0.01 && d2 < -0.01
           // first derivative must be zero and the second derivative must be negative for this to be a peak
