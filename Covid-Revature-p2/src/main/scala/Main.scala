@@ -19,7 +19,7 @@ object Main {
     def main(args: Array[String]): Unit = {
 
 
-      Trends.run()
+//      Trends.run()
 
       val spark = Spark.sparkRun()
 //      val s = "Deaths US"
@@ -29,13 +29,14 @@ object Main {
       //val sqlDF = spark.sql("SELECT Combined_Key ,max(`5/2/21`) as maxDeaths from people group by Combined_Key order by maxDeaths DESC limit 1" )
       //sqlDF.show()
 
-      PeakAnalysis.findPeak(spark)
+//      PeakAnalysis.findPeak(spark)
+      PeakAnalysis.findPeakV2(spark)
 
 
 
 
 
-    // spark.close()
+     spark.close()
 
     }
 
