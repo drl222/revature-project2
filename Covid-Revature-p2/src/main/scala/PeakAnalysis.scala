@@ -6,10 +6,6 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import org.apache.spark.sql.functions.{collect_list, sort_array, struct, sum, udf, desc, asc}
 
-implicit def ordered: Ordering[Date] = new Ordering[Date] {
-  def compare(x: Date, y: Date): Int = x compareTo y
-}
-
 object PeakAnalysis {
   def subtract_and_halve(a:Seq[Double], b:Seq[Double]):Seq[Double] = {
     (a,b).zipped.map({
@@ -87,6 +83,9 @@ object PeakAnalysis {
 
   def findPeakV2(spark:SparkSession): Unit = {
     import spark.implicits._
+    implicit def ordered: Ordering[Date] = new Ordering[Date] {
+      def compare(x: Date, y: Date): Int = x compareTo y
+    }
 
     // UDFs
     val derivativeUDF = udf[Seq[(Date, Double)], Seq[Row]](all_rows => {

@@ -19,21 +19,21 @@ object Main {
     def main(args: Array[String]): Unit = {
 
 
-      Trends.run()
+//      Trends.run()
 
       val spark = Spark.sparkRun()
-      val s = "Deaths US"
+//      val s = "Deaths US"
 
-      Spark.loadData(s).createOrReplaceTempView("people")
+//      Spark.loadData(s).createOrReplaceTempView("people")
 
-     Geographic.geographicalData(spark)
+//     Geographic.geographicalData(spark)
 
 
 
 
 
 //      PeakAnalysis.findPeak(spark)
-//      PeakAnalysis.findPeakV2(spark)
+      PeakAnalysis.findPeakV2(spark)
 
 
 
