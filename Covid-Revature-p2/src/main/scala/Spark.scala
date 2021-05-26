@@ -1,24 +1,22 @@
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 object Spark {
+  private var spark:SparkSession = null;
 
   def sparkRun():  SparkSession = {
-    val spark =
-      SparkSession
-        .builder
-        .appName("Covid Data App")
-        //.master("local")
-        .config("spark.master", "local")
-        .config("spark.eventLog.enabled", false)
-        .getOrCreate()
-    import spark.implicits._
-    spark.sparkContext.setLogLevel("WARN")
-
+    if (spark == null) {
+      spark =
+        SparkSession
+          .builder
+          .appName("Covid Data App")
+          //.master("local")
+          .config("spark.master", "local")
+          .config("spark.eventLog.enabled", false)
+          .getOrCreate()
+      spark.sparkContext.setLogLevel("WARN")
+    }
     spark
-
   }
-
-
 
 
   def loadData(s: String): DataFrame = {
@@ -49,7 +47,7 @@ object Spark {
 
 
     }
-    val df = sparkRun.read
+    val df = spark.read
       .format("csv")
       .option("header", "true") //first line in file has headers
       .option("mode", "DROPMALFORMED")
