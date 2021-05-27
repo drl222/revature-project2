@@ -19,23 +19,28 @@ object Main {
     def main(args: Array[String]): Unit = {
 
 
-      Trends.run()
+
+     // Trends.run()
 
       val spark = Spark.sparkRun()
-//      val s = "Deaths US"
+      val s = "Deaths US"
 
-      //Spark.loadData(s).createOrReplaceTempView("people")
-      //val ff = spark.sql("select admin2, Combined_key,cast(`5/2/21` as int) from people order by `5/2/21` DESC").show
-      //val sqlDF = spark.sql("SELECT Combined_Key ,max(`5/2/21`) as maxDeaths from people group by Combined_Key order by maxDeaths DESC limit 1" )
-      //sqlDF.show()
+      Spark.loadData(s).createOrReplaceTempView("people")
 
-      //PeakAnalysis.findPeak(spark)
+     Geographic.geographicalData(spark)
 
 
 
 
 
-    // spark.close()
+      PeakAnalysis.findPeak(spark)
+
+
+
+
+      spark.close()
+
+
 
     }
 
