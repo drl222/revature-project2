@@ -53,12 +53,12 @@ Your project  should involve some analysis of covid data(Every concept of spark 
 
 - What we want to find out: "X factor influence Y result"
 - possible X factors
-	- latitude
-	- northern vs. southern hemisphere/seasons
-	- by continent
-	- initial appearance date of first confirmed case
-	- height of first peak or amount of time between first confirmed case and first peak
-	- whether or not there's more than one peak
+	> - Tanka: latitude/northern vs. southern hemisphere/seasons
+	> - Dylan: initial appearance date of first confirmed case
+	> - Derrick: height of first peak
+	- Tanka: comparing US vs. world-except-US average
+	- Dylan: by continent
+	- Derrick: whether or not there's more than one peak
 	
 	- population (external data!)
 	- mask mandates (external data!)
@@ -70,5 +70,9 @@ Your project  should involve some analysis of covid data(Every concept of spark 
 		- confirmations/deaths/recoveries per day
 	- death:recovered or death:confirmed ratios
 
-
-- TO ASK MARIA: can we use outside information? Esp. population --> Yes
+Spark technologies
+- RDD: Derrick
+- Dataframe: Dylan
+- Dataset: Derrick
+- SQL: Tanka
+We'll throw in optimization and persistence somewhere
