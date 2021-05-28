@@ -15,31 +15,15 @@ import scala.concurrent.Future
 object Main {
 
 
-
-    def main(args: Array[String]): Unit = {
-
-
-      Trends.run()
-
-      val spark = Spark.sparkRun()
-      val s = "Deaths US"
-
-      Spark.loadData(s).createOrReplaceTempView("people")
-
-     Geographic.geographicalData(spark)
+  def main(args: Array[String]): Unit = {
 
 
+    //val spark = Spark.sparkRun()
+
+    //World_Stats(spark)
+
+    CLI.menu()
 
 
-
-//      PeakAnalysis.findPeak(spark)
-//      PeakAnalysis.findPeakV2(spark)
-
-
-
-
-      spark.close()
-
-    }
-
+  }
 }
