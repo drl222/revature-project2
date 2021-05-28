@@ -19,7 +19,7 @@ object Main {
     def main(args: Array[String]): Unit = {
 
 
-      Trends.run()
+      //Trends.run()
 
       val spark = Spark.sparkRun()
       val s = "Deaths US"
