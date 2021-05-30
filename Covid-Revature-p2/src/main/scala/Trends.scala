@@ -1,9 +1,6 @@
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 object Trends {
-
-
-
     val s = "All Data"
     val d = "Deaths US"
     val Q = "Confirmed US"
@@ -16,9 +13,6 @@ object Trends {
   Spark.loadData(cw).createOrReplaceTempView("ConWorld")
 
     //loading my data in from 3 files
-
-
-
 
     def US_stats(spark: SparkSession): Unit= {
 
@@ -70,7 +64,12 @@ def World_Stats(spark: SparkSession): Unit= {
   val joinagain2 = spark.sql(" create or replace TEMPORARY view ww8 as select d.ObservationDate, d.`Country/Region`,d.deathSumWorld as TotalDeaths, f.conSumWorld as TotalCases  from ww6 f join ww7 d on (f.`Country/Region` = d.`Country/Region`)")
 
   val success2 = spark.sql(" create or replace TEMPORARY view ww9 as select *, round(TotalDeaths / TotalCases * 100,2 ) as Death_Percent  from ww8 where TotalDeaths > 1000 order by Death_percent DESC")
-  val success3 = spark.sql("select * from ww9").show(20)
+  val success3 = spark.sql("select * from ww9")
+
+  success3.coalesce(1).write.format("csv").option("header", true).save("hdfs://localhost:9000/user/project2/First_Sighting_output.csv")
+  success3.show()
+
+
 
   val QueryByMonth = spark.sql("create or replace TEMPORARY view  jan1 as select * from ww9 where ObservationDate like '01%' ")
   val QueryByMonth2 = spark.sql("create or replace TEMPORARY view  feb1 as select * from ww9 where ObservationDate like '02%' ")
@@ -79,21 +78,9 @@ def World_Stats(spark: SparkSession): Unit= {
 
   val results1 = spark.sql("select 'January' as MonthOfFirstOccurrence, Round(avg(Death_Percent),2) as DeathPercentageByMonth from jan1  Union " +
     "select 'February' as MonthOfFirstOccurrence, Round(avg(Death_Percent),2) as DeathPercentageByMonth from feb1 union " +
-    "select 'March' as MonthOfFirstOccurrence, Round(avg(Death_Percent),2) as DeathPercentageByMonth from march1").show
-
-
-
-
-
-
-
-
-
+    "select 'March' as MonthOfFirstOccurrence, Round(avg(Death_Percent),2) as DeathPercentageByMonth from march1")
+  results1.coalesce(1).write.format("csv").option("header", true).save("hdfs://localhost:9000/user/project2/First_Sighting_Breakdown_output.csv")
+  results1.show()
 }
-
-
-
-
-
 
 }
