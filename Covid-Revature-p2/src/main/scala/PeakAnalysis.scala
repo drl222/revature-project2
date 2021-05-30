@@ -4,7 +4,7 @@ import org.apache.spark.rdd.RDD
 import java.sql.Date
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import org.apache.spark.sql.functions.{collect_list, sort_array, struct, sum, udf, desc, asc}
+import org.apache.spark.sql.functions.{collect_list, sort_array, struct, sum, udf, desc, asc, round}
 
 object PeakAnalysis {
   def subtract_and_halve(a:Seq[Double], b:Seq[Double]):Seq[Double] = {
@@ -172,8 +172,9 @@ object PeakAnalysis {
 
     val final_result = peaks_and_max.join(death_ratio, peaks_and_max.col("Country/Region") === death_ratio.col("Country/Region")).
       select(peaks_and_max.col("Country/Region"),$"first_peak_date",$"first_peak_cases",$"max_peak_date",$"max_peak_cases",
-        $"max_daily_date",$"max_daily_cases",$"cases",$"deaths",$"deathPercent")
+        $"max_daily_date",$"max_daily_cases",$"cases",$"deaths",$"deathPercent").cache
 
     final_result.orderBy(desc("max_peak_cases")).show
+    final_result.coalesce(1).write.format("csv").option("header", true).save("hdfs://localhost:9000/user/project2/peak_analysis_output.csv")
   }
 }
