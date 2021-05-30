@@ -20,6 +20,8 @@ object Geographic {
       "order by cast(a.Confirmed as Double) DESC").show
 
 
+
+
     //val latData = spark.sql("select a.Last Update, a.Confirmed AS cases, w.Country/Region, w.Lat AS Latitude FROM total AS a join on world AS w on w.Country/Region = a.Country/Region")//.show(10)
     //where Lat between 35 and 45").show
 //between start date and end date
