@@ -15,7 +15,7 @@ object Geographic {
       "sum(cast(w.`5/2/21` as int)) as Confirmed_Cases, sum(cast(d.`5/2/21` as int)) as Deaths, case " +
       "when ((w.Lat between -90 and 0) AND (w.Long between 90 and 180)) then 'Australia/Pacific Islands' " +
       "when ((w.Lat between 0 and 90) AND (w.Long between 90 and 180)) then 'East/Southeast Asia'" +
-      "when ((w.Lat between 40 and 90) AND (w.Long between -25 and 90)) then 'Europe'" +
+      "when ((w.Lat between 40 and 90) AND (w.Long between -25 and 90)) then 'Europe/Central Asia'" +
       "when ((w.Lat between 0 and 40) AND (w.Long between -25 and 90)) then 'North Africa/Middle East/South Asia'" +
       "when ((w.Lat between -90 and 0) AND (w.Long between -25 and 90)) then 'Southern Africa'" +
       "when ((w.Lat between -90 and 10) AND (w.Long between -180 and -25)) then 'South America'" +
