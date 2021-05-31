@@ -1,7 +1,6 @@
 import scala.io.StdIn
 
-object CLI
-{
+object CLI {
 
 
   def menu(): Unit = {
@@ -57,11 +56,10 @@ object CLI
   }
 
 
-      //names can be changed. this is just a placeholder
-      def printmenu(): Unit = {
-      List("Menu Options", "1. USA Stats", "2. World Stats", "3. Peak Stats", "4. Geo Stats", "5. Exit").foreach(println)
-    }
-
+  //names can be changed. this is just a placeholder
+  def printmenu(): Unit = {
+    List("Menu Options", "1. USA Stats", "2. World Stats", "3. Peak Stats", "4. Geo Stats", "5. Exit").foreach(println)
+  }
 
 
 }
