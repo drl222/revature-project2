@@ -141,8 +141,8 @@ object PeakAnalysis {
       s"date('${date.format(date_formatter_output)}'),`$str`"
     }).mkString(",")
     val stack_str = s"stack(${all_dates_str.length},${all_columns_unpivot_str}) as (date, cases)"
-    val df_confirmed = Spark.loadData("Confirmed World").cache()
-    val df_deaths = Spark.loadData("Deaths World").cache()
+    val df_confirmed = Spark.loadData("Confirmed World").repartition(30).cache()
+    val df_deaths = Spark.loadData("Deaths World").repartition(30).cache()
     val unpivoted = df_confirmed.selectExpr("`Country/Region`", stack_str).withColumn("cases", $"cases".cast("Int")).
       groupBy("Country/Region", "date").agg(sum("cases").alias("cases")).
       groupBy("Country/Region").agg(sort_array(collect_list(struct($"date", $"cases"))).as("cases_by_date")).orderBy("Country/Region")
@@ -152,8 +152,10 @@ object PeakAnalysis {
       agg(sum("5/2/21").alias("cases"))
     val deaths_last_day = df_deaths.select($"Country/Region", $"5/2/21".cast("Int")).groupBy("Country/Region").
       agg(sum("5/2/21").alias("deaths"))
-    val death_ratio = confirmed_last_day.join(deaths_last_day, confirmed_last_day.col("Country/Region") === deaths_last_day.col("Country/Region")).
-      drop(deaths_last_day.col("Country/Region")).withColumn("deathPercent", $"deaths" / $"cases" * 100)
+    val death_ratio = confirmed_last_day.join(
+      deaths_last_day,
+      confirmed_last_day.col("Country/Region") === deaths_last_day.col("Country/Region")
+      ).drop(deaths_last_day.col("Country/Region")).withColumn("deathPercent", $"deaths" / $"cases" * 100)
 
     // find peaks and maxes
     val derivs_df = unpivoted.select($"Country/Region", $"cases_by_date",
@@ -171,9 +173,19 @@ object PeakAnalysis {
         $"max_peak._1".as("max_peak_date"), $"max_peak._2".as("max_peak_cases"),
         $"max_daily._1".as("max_daily_date"), $"max_daily._2".as("max_daily_cases"))
 
-    val final_result = peaks_and_max.join(death_ratio, peaks_and_max.col("Country/Region") === death_ratio.col("Country/Region")).
-      select(peaks_and_max.col("Country/Region"), $"first_peak_date", $"first_peak_cases", $"max_peak_date", $"max_peak_cases",
-        $"max_daily_date", $"max_daily_cases", $"cases", $"deaths", $"deathPercent").cache
+    val final_result = peaks_and_max.join(
+      death_ratio,
+      peaks_and_max.col("Country/Region") === death_ratio.col("Country/Region")
+      ).select(
+        peaks_and_max.col("Country/Region"),
+        $"first_peak_date",
+        round($"first_peak_cases").as("first_peak_cases"),
+        $"max_peak_date",
+        round($"max_peak_cases").as("max_peak_cases"),
+        $"max_daily_date",
+        round($"max_daily_cases").as("max_daily_cases"),
+        $"cases", $"deaths",
+        round($"deathPercent", scale=2).as( "deathPercent")).cache
 
     final_result.orderBy(desc("max_peak_cases")).show
     final_result.coalesce(1).write.format("csv").option("header", true).mode(SaveMode.Overwrite).
