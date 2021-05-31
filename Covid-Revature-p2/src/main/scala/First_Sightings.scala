@@ -59,18 +59,20 @@ object First_Sightings {
     spark.sql("create or replace TEMPORARY view ww5 as select `Country/Region`, sum(cast(`5/2/21` as int)) as deathSumWorld from DeathWorld group by `Country/Region` order by `Country/Region` ")
     spark.sql("create or replace TEMPORARY view ww6 as select `Country/Region`, sum(cast(`5/2/21` as int)) as conSumWorld from ConWorld group by `Country/Region` order by `Country/Region` ")
     spark.sql("create or replace TEMPORARY view ww7 as select f.ObservationDate, d.`Country/Region`,d.deathSumWorld  from ww4 f join ww5 d on (f.`Country/Region` = d.`Country/Region`)")
-    spark.sql(" create or replace TEMPORARY view ww8 as select d.ObservationDate, d.`Country/Region`,d.deathSumWorld as TotalDeaths, f.conSumWorld as TotalCases  from ww6 f join ww7 d on (f.`Country/Region` = d.`Country/Region`)")
+    spark.sql(" create or replace TEMPORARY view ww8 as select d.ObservationDate as FirstSightingDate, d.`Country/Region`,d.deathSumWorld as TotalDeaths, f.conSumWorld as TotalCases  from ww6 f join ww7 d on (f.`Country/Region` = d.`Country/Region`)")
 
     spark.sql(" create or replace TEMPORARY view ww9 as select *, round(TotalDeaths / TotalCases * 100,2 ) as Death_Percent  from ww8 where TotalDeaths > 1000 order by Death_percent DESC")
+
     val result = spark.sql("select * from ww9")
+
 
     result.coalesce(1).write.format("csv").option("header", true).mode(SaveMode.Overwrite).save("hdfs://localhost:9000/user/project2/First_Sighting_output.csv")
     result.show()
 
 
-    spark.sql("create or replace TEMPORARY view  jan1 as select * from ww9 where ObservationDate like '01%' ")
-    spark.sql("create or replace TEMPORARY view  feb1 as select * from ww9 where ObservationDate like '02%' ")
-    spark.sql(" create or replace TEMPORARY view march1 as select * from ww9 where ObservationDate like '03%' ")
+    spark.sql("create or replace TEMPORARY view  jan1 as select * from ww9 where FirstSightingDate  like '01%' ")
+    spark.sql("create or replace TEMPORARY view  feb1 as select * from ww9 where FirstSightingDate like '02%' ")
+    spark.sql(" create or replace TEMPORARY view march1 as select * from ww9 where FirstSightingDate like '03%' ")
 
 
     val results2 = spark.sql("select 'January' as MonthOfFirstOccurrence, Round(avg(Death_Percent),2) as DeathPercentageByMonth from jan1  Union " +
