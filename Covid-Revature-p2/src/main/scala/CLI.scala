@@ -15,27 +15,24 @@ object CLI {
       var input = StdIn.readInt()
 
       input match {
+
+
         case 1 => {
-          Trends.US_stats(spark)
+          First_Sightings.World_Stats(spark)
 
         }
 
         case 2 => {
-          Trends.World_Stats(spark)
-
-        }
-
-        case 3 => {
 
           PeakAnalysis.findPeakV2(spark)
 
         }
 
-        case 4 => {
+        case 3 => {
           Geographic.geographicalData(spark)
         }
 
-        case 5 => {
+        case 4 => {
 
           // exits the program
           spark.close()
@@ -58,7 +55,7 @@ object CLI {
 
   //names can be changed. this is just a placeholder
   def printmenu(): Unit = {
-    List("Menu Options", "1. USA Stats", "2. World Stats", "3. Peak Stats", "4. Geo Stats", "5. Exit").foreach(println)
+    List("Menu Options",  "1. First Sightings Stats", "2. Peak Stats", "3. Geographical Stats", "4. Exit").foreach(println)
   }
 
 
