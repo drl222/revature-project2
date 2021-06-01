@@ -22,6 +22,6 @@ This project will analyze the following:
 ## Contributors
 
 * Dylan Stuart
-* Derreck Lin
+* Derrick Lin
 * Tanka Gautam
 
