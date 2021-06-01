@@ -2,7 +2,7 @@
 
 ## Project Description
 
-The purpose of this Spark application is to process Covid data.
+The purpose of this CLI application is to find trends in COVID data.
 
 ## Technologies Used
 
@@ -12,12 +12,13 @@ The purpose of this Spark application is to process Covid data.
 
 ## Features
 
-This project will analyze the following: 
-* Date of first sighting
-* Peaks in cases (date and height of largest peak)
+This project look at the following independent variables: 
+* Date of first sighting for each country
+* Peaks in cases for each country (date and height of largest peak)
 * Geography (latitude and longitude)
-* The dependent variable we’re trying to find a correlations with is the total deaths / total confirmed cases, for each country
 
+And see if there is any correlation with the following dependent variable:
+* Death ratio = the total deaths / total confirmed cases (i.e. how deadly the disease is)
 
 ## Contributors
 
